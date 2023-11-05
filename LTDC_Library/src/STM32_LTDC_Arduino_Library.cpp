@@ -139,7 +139,7 @@ void LTDCDriver::drawPixel(int16_t x0, int16_t y0, uint16_t color)
     _b = ((uint16_t)(_b) * 255 + 15) / 31;
 
     // Combine the components into an 888RGB color
-    uint32_t _rgb = ((_r << 16) | (_g << 8) | _b) | 0xFF000000;
+    uint32_t _rgb = ((_r << 16) | (_g << 8) | _b) | _gfxAlpha;
 
     *(uint32_t*)(_fbPtr + ((y0 * LTDC_LCD_WIDTH + x0) * 4)) = _rgb;
 }
@@ -204,6 +204,11 @@ void LTDCDriver::setCurrentLayer(uint8_t _layer)
     {
         _fbPtr = STM32_LTDC_LAYER2_ADDR;
     }
+}
+
+void LTDCDriver::setAdafruitGFXAlpha(uint8_t _alphaLayerValue)
+{
+    _gfxAlpha = _alphaLayerValue << 24;
 }
 
 void LTDCDriver::end()

@@ -13,6 +13,9 @@ LTDCDriver lcd;
 //Create the object for UART (needed for the STM32f7508-DK Board).
 HardwareSerial myUART(USART1);
 
+// Variable that holds the state of the user button.
+uint8_t userButtonState = 0;
+
 void setup()
 {
     // Hot fix for now.
@@ -22,6 +25,9 @@ void setup()
     // Init the serial communication.
     myUART.begin(115200);
     myUART.println("Code has started!");
+
+    // Set the pin for the "high beams icon" (USER BUTTON).
+    pinMode(PI11, INPUT);
 
     // Init the library for the LCD.
     lcd.begin();
@@ -48,10 +54,10 @@ void setup()
     lcd.setTextColor(0xFFFF, 0x0000);
 
     // Select addtional layer.
-    lcd.setCurrentLayer(1);
+    //lcd.setCurrentLayer(1);
 
     // Draw low beam icon at X = 20, Y = 220.
-    lcd.drawBitmap32Bit(20, 220, (uint32_t*)lowBeamIcon, lowBeamIcon_w, lowBeamIcon_h);
+    //lcd.drawBitmap32Bit(20, 220, (uint32_t*)lowBeamIcon, lowBeamIcon_w, lowBeamIcon_h);
 
     //Go back to the main layer.
     lcd.setCurrentLayer(0);
@@ -63,8 +69,44 @@ void setup()
 int i = 0;
 void loop()
 {
+    // Print variable on the LCD.
     lcd.setCursor(0, 0);
     lcd.printf("Test %d", i++);
+
+    // Check the state of the user button.
+    int userButton = digitalRead(PI11);
+
+    // If there is change detected, update the icon state (visable or not).
+    if (userButton != userButtonState)
+    {
+        // Set the current layer to the addtional layer.
+        lcd.setCurrentLayer(1);
+
+        // If the button is pressed, icon should be visable.
+        if (userButton)
+        {
+            // Set the alpha to visible.
+            lcd.setAdafruitGFXAlpha(0xFF);
+
+            // Draw the icon.
+            lcd.drawBitmap32Bit(100, 220, (uint32_t*)highBeamIcon, highBeamIcon_w, highBeamIcon_h);
+        }
+        else
+        {
+            // Otherwise, icon should not be visable (set alpha to 0).
+            lcd.setAdafruitGFXAlpha(0x00);
+
+            // Draw a "white" rectangle.
+            lcd.fillRect(100, 220, highBeamIcon_w, highBeamIcon_h, 0);
+        }
+
+        // Set everything back to normal.
+        lcd.setCurrentLayer(0);
+        lcd.setAdafruitGFXAlpha(0xFF);
+    }
+
+    // Update the user button variable state.
+    userButtonState = userButton;
 }
 
 // Custom clock config - TODO: Put this into the libary somehow.
