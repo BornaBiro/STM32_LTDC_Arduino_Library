@@ -4,6 +4,9 @@
 // Include the image bitmap data.
 #include "image1.h"
 
+// Include icons.
+#include "icons.h"
+
 // Create the lcd object for LTDC library.
 LTDCDriver lcd;
 
@@ -23,14 +26,35 @@ void setup()
     // Init the library for the LCD.
     lcd.begin();
 
-    // Fill the screen with blue color (32bit color - ARGB).
-    lcd.fill(0x000000FF);
+    // Set main layer (backgorund layer)
+    lcd.setCurrentLayer(0);
+
+    // Fill the screen with purple color (32bit color - ARGB).
+    lcd.fill(0xFF900CC2);
+
+    // Set addidional layer (backgorund layer)
+    lcd.setCurrentLayer(1);
+
+    // Set all to transparent.
+    lcd.fill(0x00000000);
+
+    // Switch back to main layer.
+    lcd.setCurrentLayer(0);
 
     // Draw a bitmap at X = 75 and Y = 75.
     lcd.drawRGBBitmap(75, 75, img1, img1_w, img1_h);
 
     // Set text to white color and background to black color.
     lcd.setTextColor(0xFFFF, 0x0000);
+
+    // Select addtional layer.
+    lcd.setCurrentLayer(1);
+
+    // Draw low beam icon at X = 20, Y = 220.
+    lcd.drawBitmap32Bit(20, 220, (uint32_t*)lowBeamIcon, lowBeamIcon_w, lowBeamIcon_h);
+
+    //Go back to the main layer.
+    lcd.setCurrentLayer(0);
 
     // Set text size multiplier to 5.
     lcd.setTextSize(5);

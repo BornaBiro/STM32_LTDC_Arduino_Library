@@ -7,13 +7,16 @@
 // Include header file for addidional HAL modules that needs to be enabled.
 //#include "hal_conf_extra.h"
 
-// Include GPIO Pin names.
-#include "STM32_Pins.h"
-
 // Include STM32 HAL Files
 #include "stm32f7xx_hal.h"
 #include "stm32f7xx_hal_sram.h"
 #include "stm32f7xx_hal_ltdc.h"
+
+// Include GPIO Pin names.
+#include "STM32_Pins.h"
+
+// Include library defines.
+#include "defines.h"
 
 #define SDRAM_MODEREG_BURST_LENGTH_1             ((uint16_t)0x0000)
 #define SDRAM_MODEREG_BURST_LENGTH_2             ((uint16_t)0x0001)

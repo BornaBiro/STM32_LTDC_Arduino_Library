@@ -16,6 +16,7 @@ void MX_LTDC_Init(void)
     myUART.println("MX_LTDC_Init");
     // Got all this from STM32CubeIDE.
     LTDC_LayerCfgTypeDef pLayerCfg = {0};
+    LTDC_LayerCfgTypeDef pLayerCfg1 = {0};
 
     hltdc.Instance = LTDC;
     hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
@@ -44,15 +45,35 @@ void MX_LTDC_Init(void)
     pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_ARGB8888;
     pLayerCfg.Alpha = 255;
     pLayerCfg.Alpha0 = 0;
-    pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
-    pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
-    pLayerCfg.FBStartAdress = 0xC0000000;
+    pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
+    pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
+    pLayerCfg.FBStartAdress = STM32_LTDC_LAYER1_ADDR;
     pLayerCfg.ImageWidth = 480;
     pLayerCfg.ImageHeight = 272;
     pLayerCfg.Backcolor.Blue = 0;
     pLayerCfg.Backcolor.Green = 0;
     pLayerCfg.Backcolor.Red = 0;
     if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+    pLayerCfg1.WindowX0 = 0;
+    pLayerCfg1.WindowX1 = 480;
+    pLayerCfg1.WindowY0 = 0;
+    pLayerCfg1.WindowY1 = 272;
+    pLayerCfg1.PixelFormat = LTDC_PIXEL_FORMAT_ARGB8888;
+    pLayerCfg1.Alpha = 255;
+    pLayerCfg1.Alpha0 = 0;
+    pLayerCfg1.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
+    pLayerCfg1.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
+    pLayerCfg1.FBStartAdress = STM32_LTDC_LAYER2_ADDR;
+    pLayerCfg1.ImageWidth = 480;
+    pLayerCfg1.ImageHeight = 272;
+    pLayerCfg1.Backcolor.Blue = 0;
+    pLayerCfg1.Backcolor.Green = 0;
+    pLayerCfg1.Backcolor.Red = 0;
+    if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg1, 1) != HAL_OK)
     {
         Error_Handler();
     }

@@ -83,10 +83,10 @@ void LTDCDriver::begin()
     // Initialize driver for the DMA.
     MX_DMA_Init();
 
-    // 
+    // Init the FMC (for SDRAM).
     MX_FMC_Init();
     
-    // 
+    // Init the Parallel LCD Controller.
     MX_LTDC_Init();
 
     // Link SDRAM with DMA.
@@ -110,6 +110,7 @@ void LTDCDriver::drawPixel(int16_t x0, int16_t y0, uint16_t color)
 {
     if (x0 > width() - 1 || y0 > height() - 1 || x0 < 0 || y0 < 0) return;
 
+    // TODO: Check this if this work at all.
     // switch (rotation)
     // {
     // case 1:
@@ -140,7 +141,7 @@ void LTDCDriver::drawPixel(int16_t x0, int16_t y0, uint16_t color)
     // Combine the components into an 888RGB color
     uint32_t _rgb = ((_r << 16) | (_g << 8) | _b) | 0xFF000000;
 
-    *(uint32_t*)(0xC0000000 + ((y0 * LTDC_LCD_WIDTH + x0) * 4)) = _rgb;
+    *(uint32_t*)(_fbPtr + ((y0 * LTDC_LCD_WIDTH + x0) * 4)) = _rgb;
 }
 
 void LTDCDriver::clearDisplay()
@@ -163,7 +164,7 @@ void LTDCDriver::fill(uint32_t _color)
     for (int i = 0; i < 272; i++)
     {
         // Staart the DMA transfer.
-  	    HAL_SDRAM_Write_DMA(_mySDRAM, (uint32_t*)(0xC0000000 + (480 * i * 4)), fbData, 480);
+  	    HAL_SDRAM_Write_DMA(_mySDRAM, (uint32_t*)(_fbPtr + (480 * i * 4)), fbData, 480);
 
         // Wait until the transfer is done.
         HAL_DMA_PollForTransfer(_myDMA, HAL_DMA_FULL_TRANSFER, 0xFFF);
@@ -173,7 +174,39 @@ void LTDCDriver::fill(uint32_t _color)
     }
 }
 
+void LTDCDriver::drawBitmap32Bit(int _x, int _y, uint32_t *_bitmap, int _w, int _h)
+{
+    // Calculate the framebuffer start offset.
+    uint32_t _offset = ((width() * _y) + _x) * 4;
+
+    // Write the pixels to the selected framebuffer.
+    // TODO: Add rotation!
+    for (int i = 0; i < _w; i++)
+    {
+        for (int j = 0; j < _h; j++)
+        {
+            *(uint32_t*)(_fbPtr + _offset + (((width() * j) + i) * 4)) = _bitmap[(_w * j) + i];
+        }
+    }
+}
+
+void LTDCDriver::setCurrentLayer(uint8_t _layer)
+{
+    // Limit to olny two layers.
+    _layer = _layer & 1;
+
+    // Select the layer.
+    if (_layer == 0)
+    {
+        _fbPtr = STM32_LTDC_LAYER1_ADDR;
+    }
+    else if (_layer == 1)
+    {
+        _fbPtr = STM32_LTDC_LAYER2_ADDR;
+    }
+}
+
 void LTDCDriver::end()
 {
-
+    // TODO: Add de-init.
 }

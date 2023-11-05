@@ -20,6 +20,9 @@
 #include "stm32f7xx_hal_sram.h"
 #include "stm32f7xx_hal_ltdc.h"
 
+// Include library defines.
+#include "defines.h"
+
 // Include library specific includes for STM32 LTDC Driver.
 #include "STM32_System_Init.h"
 
@@ -34,11 +37,14 @@ class LTDCDriver : public Adafruit_GFX
     void drawPixel(int16_t x0, int16_t y0, uint16_t color);
     void clearDisplay();
     void fill(uint32_t _color);
+    void drawBitmap32Bit(int _x, int _y, uint32_t *_bitmap, int _w, int _h);
+    void setCurrentLayer(uint8_t _layer);
     void end();
 
   private:
     DMA_HandleTypeDef *_myDMA;
     SDRAM_HandleTypeDef *_mySDRAM;
+    uint32_t _fbPtr = 0xC0000000;
 };
 
 #endif
