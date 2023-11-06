@@ -17,11 +17,7 @@ HardwareSerial myUART(USART1);
 uint8_t userButtonState = 0;
 
 void setup()
-{
-    // Hot fix for now.
-    SCB_DisableICache();
-    SCB_DisableDCache();
-    
+{   
     // Init the serial communication.
     myUART.begin(115200);
     myUART.println("Code has started!");

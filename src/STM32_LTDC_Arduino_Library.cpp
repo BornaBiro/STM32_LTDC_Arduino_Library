@@ -161,6 +161,13 @@ void LTDCDriver::fill(uint32_t _color)
   	    fbData[i] = _color;
     }
 
+    // DCache issue... Thanks chatGPT for the help with this one.
+    // Clean and invalidate the entire DCache
+    SCB_CleanInvalidateDCache();
+
+    // Data synchronization barrier
+    __DSB();
+
     for (int i = 0; i < 272; i++)
     {
         // Staart the DMA transfer.
@@ -172,6 +179,12 @@ void LTDCDriver::fill(uint32_t _color)
         // Set the state of the SDRAM controller to READY (DMA sets it to BUSY).
   	    _mySDRAM->State = HAL_SDRAM_STATE_READY;
     }
+    
+    // Clean and invalidate the entire DCache
+    SCB_CleanInvalidateDCache();
+
+    // Data synchronization barrier
+    __DSB();
 }
 
 void LTDCDriver::drawBitmap32Bit(int _x, int _y, uint32_t *_bitmap, int _w, int _h)
