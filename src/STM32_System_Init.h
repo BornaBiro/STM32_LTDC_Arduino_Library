@@ -5,12 +5,12 @@
 #include "Arduino.h"
 
 // Include header file for addidional HAL modules that needs to be enabled.
-//#include "hal_conf_extra.h"
+// #include "hal_conf_extra.h"
 
 // Include STM32 HAL Files
 #include "stm32f7xx_hal.h"
-#include "stm32f7xx_hal_sram.h"
 #include "stm32f7xx_hal_ltdc.h"
+#include "stm32f7xx_hal_sram.h"
 
 // Include GPIO Pin names.
 #include "STM32_Pins.h"
@@ -41,12 +41,12 @@ void MX_DMA_Init(void);
 void MX_FMC_Init(void);
 
 // Must be declared as extern "C" for HAL library in the Arduino STM32 Core can find them.
-extern "C" void HAL_LTDC_MspInit(LTDC_HandleTypeDef* hltdc);
-extern "C" void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef* hltdc);
+extern "C" void HAL_LTDC_MspInit(LTDC_HandleTypeDef *hltdc);
+extern "C" void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef *hltdc);
 extern "C" void HAL_FMC_MspInit(void);
-extern "C" void HAL_SDRAM_MspInit(SDRAM_HandleTypeDef* hsdram);
+extern "C" void HAL_SDRAM_MspInit(SDRAM_HandleTypeDef *hsdram);
 extern "C" void HAL_FMC_MspDeInit(void);
-extern "C" void HAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef* hsdram);
+extern "C" void HAL_SDRAM_MspDeInit(SDRAM_HandleTypeDef *hsdram);
 
 // Return the DMA instance (needed in the library).
 DMA_HandleTypeDef *getDMAInstance();

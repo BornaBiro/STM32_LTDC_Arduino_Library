@@ -9,16 +9,21 @@
 #define LTDC_LCD_HEIGHT 272
 
 #ifndef _swap_int16_t
-#define _swap_int16_t(a, b) { int16_t t = a; a = b; b = t; }
+#define _swap_int16_t(a, b)                                                                                            \
+    {                                                                                                                  \
+        int16_t t = a;                                                                                                 \
+        a = b;                                                                                                         \
+        b = t;                                                                                                         \
+    }
 #endif
 
 // Include header file for addidional HAL modules that needs to be enabled.
-//#include "hal_conf_extra.h"
+// #include "hal_conf_extra.h"
 
 // Include STM32 HAL Files
 #include "stm32f7xx_hal.h"
-#include "stm32f7xx_hal_sram.h"
 #include "stm32f7xx_hal_ltdc.h"
+#include "stm32f7xx_hal_sram.h"
 
 // Include library defines.
 #include "defines.h"
