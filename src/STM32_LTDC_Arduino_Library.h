@@ -40,6 +40,7 @@ class LTDCDriver : public Adafruit_GFX
     void drawBitmap32Bit(int _x, int _y, uint32_t *_bitmap, int _w, int _h);
     void setCurrentLayer(uint8_t _layer);
     void setAdafruitGFXAlpha(uint8_t _alphaLayerValue);
+    void drawPixel32Bit(int _x, int _y, uint32_t _color);
     void end();
 
   private:

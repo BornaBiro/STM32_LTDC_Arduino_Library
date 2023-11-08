@@ -189,18 +189,22 @@ void LTDCDriver::fill(uint32_t _color)
 
 void LTDCDriver::drawBitmap32Bit(int _x, int _y, uint32_t *_bitmap, int _w, int _h)
 {
-    // Calculate the framebuffer start offset.
-    uint32_t _offset = ((width() * _y) + _x) * 4;
-
     // Write the pixels to the selected framebuffer.
     // TODO: Add rotation!
     for (int i = 0; i < _w; i++)
     {
         for (int j = 0; j < _h; j++)
         {
-            *(uint32_t*)(_fbPtr + _offset + (((width() * j) + i) * 4)) = _bitmap[(_w * j) + i];
+            drawPixel32Bit(_x + i, _y + j, _bitmap[(_w * j) + i]);
         }
     }
+}
+
+void LTDCDriver::drawPixel32Bit(int _x, int _y, uint32_t _color)
+{
+    // Calculate the framebuffer start offset.
+    //uint32_t _offset = ((width() * _y) + _x) * 4;
+    *(uint32_t*)(_fbPtr + (((width() * _y) + _x) * 4)) = _color;
 }
 
 void LTDCDriver::setCurrentLayer(uint8_t _layer)
